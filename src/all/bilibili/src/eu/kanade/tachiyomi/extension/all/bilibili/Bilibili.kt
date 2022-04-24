@@ -368,13 +368,13 @@ abstract class Bilibili(
         }
 
         return result.data!!.episodeList
-            .filter { episode -> episode.payMode == 0 && episode.payGold == 0 }
             .map { ep -> chapterFromObject(ep, result.data.id) }
     }
 
     protected fun chapterFromObject(episode: BilibiliEpisodeDto, comicId: Int): SChapter = SChapter.create().apply {
         name = episodePrefix + episode.shortTitle +
             (if (episode.title.isNotBlank()) " - " + episode.title else "")
+        if (episode.payMode != 0 || episode.payGold != 0) name = "$name \uD83D\uDD12"
         date_upload = episode.publicationTime.substringBefore("T").toDate()
         url = "/mc$comicId/${episode.id}"
     }
